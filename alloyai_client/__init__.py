@@ -1,4 +1,4 @@
-from .alloy_client import AlloyClient, AlloyClientError
+from .alloyai_client import AlloyClient, AlloyClientError
 from .types import ChatResponse, JsonSchemaValue, Message, Tool
 
 __all__ = [
