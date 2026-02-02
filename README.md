@@ -5,7 +5,7 @@ A lightweight Python client for the Alloy server.
 ## Install
 
 ```bash
-pip install alloy-client
+pip install alloyai-client
 ```
 
 For local development:
