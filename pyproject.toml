@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alloy-client"
+version = "0.1.0"
+description = "Python client for the Alloy server"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = [
+    "pydantic>=2.12.5,<3",
+    "pillow>=12.1.0,<13",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["alloy_client*"]
