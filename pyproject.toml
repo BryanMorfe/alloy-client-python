@@ -16,4 +16,4 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["alloy_client*"]
+include = ["alloyai_client*"]
