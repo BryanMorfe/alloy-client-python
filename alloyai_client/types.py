@@ -14,7 +14,6 @@ from pydantic import (
     ConfigDict,
     Field,
 )
-from PIL.Image import Image
 
 JsonSchemaValue = Dict[str, Any]
 
@@ -115,18 +114,6 @@ class Message(SubscriptableBaseModel):
 
     thinking: Optional[str] = None
     'Thinking content. Only present when thinking is enabled.'
-
-    images: Optional[Sequence[Image]] = None
-    """
-    Optional list of image data for multimodal models.
-
-    Valid input types are:
-
-    - `str` or path-like object: path to image file
-    - `bytes` or bytes-like object: raw image data
-
-    Valid image formats depend on the model. See the model card for more information.
-    """
 
     tool_name: Optional[str] = None
     'Name of the executed tool.'
