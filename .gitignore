@@ -34,3 +34,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Example outputs
+client_outputs/
