@@ -17,7 +17,7 @@ pip install -e .
 ## Quick start
 
 ```python
-from alloy_client import AlloyClient
+from alloyai_client import AlloyClient
 
 client = AlloyClient("http://127.0.0.1:8000")
 
@@ -39,6 +39,27 @@ audio = client.audio(
     text="Hello from Alloy",
 )
 print(audio["sample_rate"], len(audio["outputs"]))
+
+# Node metadata
+models = client.models()
+print([model.model_id for model in models.image])
+```
+
+## Distributed node manager
+
+```python
+from alloyai_client import AlloyNodeManager, NodeConfig, NodeQueryMode
+
+manager = AlloyNodeManager(
+    nodes=[
+        NodeConfig(base_url="http://node0:8000", name="node0", weight=1.0),
+        NodeConfig(base_url="http://node1:8000", name="node1", weight=1.0),
+    ],
+    mode=NodeQueryMode.CONTROLLED_QUERYING,
+    max_nodes_to_query=2,
+)
+
+result = manager.image(model_id="qwen-image", prompt="a cinematic portrait")
 ```
 
 ## Types
@@ -47,7 +68,7 @@ The client re-exports minimal Ollama-style types so you can annotate inputs with
 pulling in the `ollama` dependency:
 
 ```python
-from alloy_client import Message, JsonSchemaValue
+from alloyai_client import Message, JsonSchemaValue, AlloyModelsResponse
 ```
 
 ## Notes

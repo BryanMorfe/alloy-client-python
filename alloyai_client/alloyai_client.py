@@ -17,7 +17,7 @@ from typing import (
     Union,
 )
 
-from .types import ChatResponse, JsonSchemaValue, Message, Tool
+from .types import AlloyModelsResponse, ChatResponse, JsonSchemaValue, Message, Tool
 
 
 class AlloyClientError(RuntimeError):
@@ -137,6 +137,16 @@ class AlloyClient:
         with response:
             return self._read_json(response)
 
+    def models(
+        self,
+        *,
+        timeout_s: Optional[float] = None,
+    ) -> AlloyModelsResponse:
+        response = self._get("/models", timeout_s=timeout_s)
+        with response:
+            payload = self._read_json(response)
+        return AlloyModelsResponse.model_validate(payload)
+
     def _post(
         self,
         path: str,
@@ -152,6 +162,22 @@ class AlloyClient:
             "Accept": "text/event-stream" if stream else "application/json",
         }
         request = urllib.request.Request(url, data=data, method="POST", headers=headers)
+        timeout = self._timeout_s if timeout_s is None else timeout_s
+        try:
+            return urllib.request.urlopen(request, timeout=timeout)
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", "ignore")
+            message = body or exc.reason
+            raise AlloyClientError(exc.code, message, body=body) from None
+
+    def _get(
+        self,
+        path: str,
+        *,
+        timeout_s: Optional[float],
+    ):
+        url = f"{self._base_url}{path}"
+        request = urllib.request.Request(url, method="GET")
         timeout = self._timeout_s if timeout_s is None else timeout_s
         try:
             return urllib.request.urlopen(request, timeout=timeout)

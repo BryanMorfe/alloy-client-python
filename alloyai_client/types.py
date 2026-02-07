@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+from enum import Enum
 from typing import (
     Any,
     Dict,
+    List,
     Literal,
     Mapping,
     Optional,
     Sequence,
+    Set,
     Union,
 )
 from pydantic import (
@@ -218,3 +221,38 @@ class ChatResponse(BaseGenerateResponse):
 
     message: Message
     'Response message.'
+
+
+class Modality(str, Enum):
+    TEXT = "text"
+    IMAGE = "image"
+    AUDIO = "audio"
+    VIDEO = "video"
+
+
+class AllocationStatus(str, Enum):
+    ALLOCATED = "allocated"
+    QUEUE = "queue"
+    DEALLOCATED = "deallocated"
+
+
+class ModelCapability(SubscriptableBaseModel):
+    inputs: Set[Modality]
+    outputs: Set[Modality]
+    name: Optional[str] = None
+
+
+class AlloyModel(SubscriptableBaseModel):
+    model_id: str
+    active_requests: int
+    is_supported: bool
+    supports_concurrent_requests: bool = False
+    capabilities: List[ModelCapability]
+    allocation_status: AllocationStatus
+
+
+class AlloyModelsResponse(SubscriptableBaseModel):
+    image: List[AlloyModel] = Field(default_factory=list)
+    audio: List[AlloyModel] = Field(default_factory=list)
+    video: List[AlloyModel] = Field(default_factory=list)
+    text: List[AlloyModel] = Field(default_factory=list)
